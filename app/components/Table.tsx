@@ -8,7 +8,7 @@ interface TableProps {
 
 export function Table({ rows }: TableProps) {
   return (
-    <div className="m-5 lg:mx-auto lg:max-w-[75%] overflow-hidden rounded-lg border border-slate-700">
+    <div className="w-full overflow-hidden rounded-lg border border-slate-700">
       <table className="min-w-full border-collapse text-left text-sm text-slate-200">
         <thead className="bg-slate-800 text-slate-100">
           <tr>
