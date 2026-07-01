@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface PaginationButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -6,11 +5,11 @@ interface PaginationButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> 
 	isActive?: boolean;
 }
 function PaginationButton({ children, isActive = false, ...props }: PaginationButtonProps) {
-	const baseClasses = "rounded border px-3 py-2 text-sm transition";
+	const baseClasses = "rounded border px-3 py-2 text-sm transition enabled:cursor-pointer";
 
 	if (isActive) {
 		return (
-			<span className={`${baseClasses} border-slate-600 bg-slate-700 font-semibold text-slate-100`}>
+			<span className={`${baseClasses} border-slate-600 bg-slate-700 font-bold text-slate-100`}>
 				{children}
 			</span>
 		);
@@ -31,7 +30,7 @@ function PaginationButton({ children, isActive = false, ...props }: PaginationBu
 interface PaginationProps {
 	totalPages: number;
 	pageNumber: number;
-	setPage: Dispatch<SetStateAction<number>>;
+	setPage: (page: number) => void;
 }
 
 export function Pagination({ totalPages, pageNumber, setPage }: PaginationProps) {
@@ -42,7 +41,7 @@ export function Pagination({ totalPages, pageNumber, setPage }: PaginationProps)
 	return (
 		<div className="flex flex-wrap items-center gap-2">
 			<PaginationButton
-				onClick={() => setPage((currentPage) => Math.max(1, currentPage - 1))}
+				onClick={() => setPage(Math.max(1, pageNumber - 1))}
 				disabled={pageNumber <= 1}
 			>
 				← Previous
@@ -72,7 +71,7 @@ export function Pagination({ totalPages, pageNumber, setPage }: PaginationProps)
 			})}
 
 			<PaginationButton
-				onClick={() => setPage((currentPage) => Math.min(totalPages, currentPage + 1))}
+				onClick={() => setPage(Math.min(totalPages, pageNumber + 1))}
 				disabled={pageNumber >= totalPages}
 			>
 				Next →

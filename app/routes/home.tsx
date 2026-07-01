@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loading } from "~/components/shared/Loading";
-import { Table } from "~/components/Table";
+import { Table } from "~/components/home/Table";
 import { useTableData } from "~/graphql/queries/getTableData";
 import { ErrorMessage } from "~/components/shared/ErrorMessage";
-import { Pagination } from "~/components/Pagination";
+import { Pagination } from "~/components/home/Pagination";
+import { Search } from "~/components/home/Search";
+import { useSearchParams } from "react-router";
 
 export function meta() {
   return [
@@ -13,29 +15,54 @@ export function meta() {
 }
 
 export default function Home() {
-  const [page, setPage] = useState(1);
-  const { data, loading, error } = useTableData(page);
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlSearchTerm = searchParams.get("name");
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
+  const { data, loading, error } = useTableData(page, urlSearchTerm);
   const rows = data?.characters.results ?? [];
   const totalPages = data?.characters.info.pages ?? 1;
 
-  if (loading && rows.length === 0) return (
-    <div className="flex flex-col px-10 py-3 gap-4 pb-8">
-      <Loading />
-    </div>
-  );
+  const setPageParam = (page: number) => {
+    setSearchParams((prev) => {
+      const nextParams = new URLSearchParams(prev);
+      nextParams.set("page", page.toString());
+      return nextParams;
+    });
+  };
 
-  if (error || rows.length === 0) {
-    return ( <div className="flex flex-col px-10 py-3 gap-4 pb-8">
-      <ErrorMessage message={error?.message ?? "Failed to load character data."} />
-    </div>);
-  }
+  const setSearchTermParam = (term: string | null) => {
+    setSearchParams((prev) => {
+      const nextParams = new URLSearchParams(prev);
+      if (term) {
+        nextParams.set("name", term);
+      } else {
+        nextParams.delete("name");
+      }
+      nextParams.set("page", "1"); // Reset to first page when search term changes
+      return nextParams;
+    });
+  };
 
   return (
-    <div className="flex flex-col px-10 py-3 gap-4 pb-8 items-center">
-      <Table rows={rows} />
+    <div className="flex w-full flex-col items-center gap-4 px-10 py-3 pb-8">
+      <div className="w-full self-start md:max-w-[50%]">
+        <Search value={urlSearchTerm} onChange={setSearchTermParam} />
+      </div>
 
-      <Pagination totalPages={totalPages} pageNumber={page} setPage={setPage} />
+      {loading ? (
+        <div className="w-full">
+          <Loading />
+        </div>
+      ) : error ? (
+        <div className="w-full">
+          <ErrorMessage message={error?.message ?? "Failed to load character data."} />
+        </div>
+      ) : (
+        <>
+          <Table rows={rows} />
+          <Pagination totalPages={totalPages} pageNumber={page} setPage={setPageParam} />
+        </>
+      )}
     </div>
   );
 }
