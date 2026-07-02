@@ -7,30 +7,28 @@ const GET_CHARACTER_BY_ID = gql`
 	character(id: $id) {
 	  id
 	  name
+	  image
 	  status
 	  species
 	  type
 	  gender
 	  origin {
-		name
-		type
-		dimension
+		  name
+		  type
 	  }
 	  location {
-		name
-		type
-		dimension
+		  name
+		  type
 	  }
-	  image
 	  episode {
 	  	name
-		episode
+		  episode
 	  }
 	  created
 	}
-  }` as TypedDocumentNode<{ character: Character }, { id: string }>;
+  }` as TypedDocumentNode<{ character: Character }, { id: number }>;
 
-export function useCharacterById(id: string, skip: boolean = false) {
+export function useCharacterById(id: number, skip: boolean = false) {
   return useQuery(GET_CHARACTER_BY_ID, {
     variables: { id },
     skip,

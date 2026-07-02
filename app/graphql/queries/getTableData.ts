@@ -8,7 +8,7 @@ type CharactersTableResponse = {
       count: number;
       pages: number;
     };
-    results: TableRow[];
+    results: TableRow[] | null;
   };
 };
 
@@ -21,9 +21,9 @@ const GET_TABLE_DATA = gql`
       }
       results {
         id
-		image
         name
-		species
+        image
+		    species
         status
       }
     }
@@ -31,5 +31,5 @@ const GET_TABLE_DATA = gql`
 ` as TypedDocumentNode<CharactersTableResponse, { page: number; name: string | null }>;
 
 export function useTableData(page: number, name: string | null) {
-  return useQuery(GET_TABLE_DATA, { variables: { page, name }, skip: (!!name && name.trim() === "" )});
+  return useQuery(GET_TABLE_DATA, { variables: { page, name } });
 }

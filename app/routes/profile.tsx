@@ -16,21 +16,22 @@ export default function Profile() {
 	const params = useParams();
 	const id = params.id ?? "";
 	const isValidId = /^\d+$/.test(id);
-	const { data, loading, error } = useCharacterById(id, !isValidId);
-
-	if (loading) return <Loading />;
-
-	if (error || !data?.character || !isValidId) {
-		const message = !isValidId
-			? "Invalid character ID."
-			: error?.message ?? "Character not found.";
-		return <ErrorMessage message={message} children={<BackToHomeLink />} />;
-	}
+	const { data, loading, error } = useCharacterById(Number(id), !isValidId);
 
 	return (
-		<>
+		<main>
 			<BackToHomeLink />
-			<CharacterProfile character={data.character} />
-		</>
+			{loading ? (
+				<div className="w-full">
+					<Loading message={`Loading details for character #${id}...`} />
+				</div>
+			) : error || !data?.character || !isValidId ? (
+				<div className="w-full">
+					<ErrorMessage message={!isValidId ? "Invalid character ID." : error?.message ?? "Character not found."} />
+				</div>
+			) : (
+				<CharacterProfile character={data.character} />
+			)}
+		</main>
 	);
 }

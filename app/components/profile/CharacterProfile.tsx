@@ -1,4 +1,4 @@
-import type { Character } from "~/types/Character";
+import type { Character, Location } from "~/types/Character";
 import { StatusPill } from "~/components/shared/StatusPill";
 
 interface CharacterProfileProps {
@@ -22,6 +22,14 @@ function DetailCard({ label, value }: { label: string; value: string }) {
   );
 }
 
+function formatLocationValue(location: Location) {
+  if (!location.type) {
+    return location.name;
+  }
+
+  return `${location.name} (${location.type})`;
+}
+
 export function CharacterProfile({ character }: CharacterProfileProps) {
   return (
     <div className="lg:max-w-[85%] lg:mx-auto p-4">
@@ -39,6 +47,7 @@ export function CharacterProfile({ character }: CharacterProfileProps) {
             <img
               src={character.image}
               alt={character.name}
+              fetchPriority="high"
               height="200"
               width="200"
               className="rounded-xl object-cover"
@@ -52,21 +61,21 @@ export function CharacterProfile({ character }: CharacterProfileProps) {
             <StatusPill status={character.status} />
           </div>
           <div className="mt-3 grid gap-3 md:grid-cols-3">
-            <DetailCard label="Origin" value={character.origin.name} />
+            <DetailCard label="Origin" value={formatLocationValue(character.origin)} />
             <DetailCard label="Species" value={`${character.species} ${character.type ? `(${character.type})` : ""}`} />
             <DetailCard label="Gender" value={character.gender} />
             <DetailCard label="Created" value={formatDate(character.created)} />
             <DetailCard label="First episode" value={character.episode[0]?.name ?? "Unknown"} />
-            <DetailCard label="Current location" value={character.location.name} />
+            <DetailCard label="Current location" value={formatLocationValue(character.location)} />
           </div>
         </div>
 
         <div className="w-full md:size-fit rounded-2xl border border-white/10 bg-slate-800/70 p-4 max-h-55 self-end">
-          <h3 className="text-sm font-medium uppercase tracking-widest text-slate-400">Appearances</h3>
+          <div className="text-sm font-medium uppercase tracking-widest text-slate-400">Appearances</div>
           <ul className="mt-3 max-h-35 space-y-2 overflow-y-auto pr-2">
             {character.episode.length > 0 ? (
               character.episode.map((episode) => (
-                <li key={episode.name} className="text-sm text-slate-100">
+                <li key={episode.episode} className="text-sm text-slate-100">
                   {episode.episode} - {episode.name}
                 </li>
               ))
