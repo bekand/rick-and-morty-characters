@@ -27,7 +27,7 @@ function getPageFromSearchParams(searchParams: URLSearchParams): number {
 }
 
 function normalizeSearchTerm(rawSearchTerm: string | null): string | null {
-  const nameParam = rawSearchTerm?.replace(/\s\s+/g, " ");
+  const nameParam = rawSearchTerm?.replace(/\s\s+/g, " ")?.slice(0, 50);
   if (nameParam) {
     return nameParam;
   }
