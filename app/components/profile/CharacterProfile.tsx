@@ -1,4 +1,4 @@
-import type { Character, Location } from "~/types/Character";
+import type { Character } from "~/types/Character";
 import { StatusPill } from "~/components/shared/StatusPill";
 
 interface CharacterProfileProps {
@@ -20,14 +20,6 @@ function DetailCard({ label, value }: { label: string; value: string }) {
       <p className="mt-2 text-base text-slate-100">{value}</p>
     </div>
   );
-}
-
-function formatLocationValue(location: Location) {
-  if (!location.type) {
-    return location.name;
-  }
-
-  return `${location.name} (${location.type})`;
 }
 
 export function CharacterProfile({ character }: CharacterProfileProps) {
@@ -61,12 +53,12 @@ export function CharacterProfile({ character }: CharacterProfileProps) {
             <StatusPill status={character.status} />
           </div>
           <div className="mt-3 grid gap-3 md:grid-cols-3">
-            <DetailCard label="Origin" value={formatLocationValue(character.origin)} />
+            <DetailCard label="Origin" value={character.origin.name} />
             <DetailCard label="Species" value={`${character.species} ${character.type ? `(${character.type})` : ""}`} />
             <DetailCard label="Gender" value={character.gender} />
             <DetailCard label="Created" value={formatDate(character.created)} />
             <DetailCard label="First episode" value={character.episode[0]?.name ?? "Unknown"} />
-            <DetailCard label="Current location" value={formatLocationValue(character.location)} />
+            <DetailCard label="Current location" value={character.location.name} />
           </div>
         </div>
 

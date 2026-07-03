@@ -1,18 +1,18 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { useCharacterById } from "~/graphql/queries/getCharacterByID";
-import { useTableData } from "~/graphql/queries/getTableData";
+import { useCharacterById } from "~/api/queries/getCharacterByID";
+import { useTableData } from "~/api/queries/getTableData";
 import Home from "~/routes/home";
 import Profile from "~/routes/profile";
 import { mockCharacter1, mockCharactersResponse } from "./mockData";
 import { LocationProbe } from "./LocationProbe";
 
-vi.mock("../app/graphql/queries/getTableData.ts", () => ({
+vi.mock("../app/api/queries/getTableData.ts", () => ({
   useTableData: vi.fn(),
 }));
 
-vi.mock("../app/graphql/queries/getCharacterByID.ts", () => ({
+vi.mock("../app/api/queries/getCharacterByID.ts", () => ({
   useCharacterById: vi.fn(),
 }));
 

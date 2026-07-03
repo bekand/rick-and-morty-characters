@@ -1,7 +1,7 @@
 import { Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import "./app.css";
-import { ApolloProvider } from "@apollo/client/react";
-import { client } from "./graphql/client";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./api/client";
 
 export default function App() {
   return (
@@ -11,9 +11,9 @@ export default function App() {
         <Meta />
       </head>
       <body>
-        <ApolloProvider client={client}>
+        <QueryClientProvider client={queryClient}>
           <Outlet />
-        </ApolloProvider>
+        </QueryClientProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { CharacterProfile } from "~/components/profile/CharacterProfile";
 import { Loading } from "~/components/shared/Loading";
 import { ErrorMessage } from "~/components/shared/ErrorMessage";
-import { useCharacterById } from "~/graphql/queries/getCharacterByID";
+import { useCharacterById } from "~/api/queries/getCharacterByID";
 import { BackToHomeLink } from "~/components/profile/BackToHomeLink";
 
 export function meta({ params }: { params: Record<string, string> }) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loading } from "~/components/shared/Loading";
 import { Table } from "~/components/home/Table";
-import { useTableData } from "~/graphql/queries/getTableData";
+import { useTableData } from "~/api/queries/getTableData";
 import { ErrorMessage } from "~/components/shared/ErrorMessage";
 import { Pagination } from "~/components/home/Pagination";
 import { Search } from "~/components/home/Search";
@@ -41,7 +41,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState(urlSearchTerm);
   const debounce = useDebounce();
 
-  const { data, loading, error } = useTableData(page, searchTerm);
+  const { data, loading, error } = useTableData(page, urlSearchTerm);
   const rows = data?.characters.results ?? [];
   const totalPages = data?.characters.info.pages ?? 1;
 

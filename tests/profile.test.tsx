@@ -2,11 +2,11 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes, useLocation } from "react-router";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import Profile from "../app/routes/profile";
-import { useCharacterById } from "../app/graphql/queries/getCharacterByID";
+import { useCharacterById } from "../app/api/queries/getCharacterByID";
 import { mockCharacter1 } from "./mockData";
 import { LocationProbe } from "./LocationProbe";
 
-vi.mock("../app/graphql/queries/getCharacterByID", () => ({
+vi.mock("../app/api/queries/getCharacterByID", () => ({
   useCharacterById: vi.fn(),
 }));
 

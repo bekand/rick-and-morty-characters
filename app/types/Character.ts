@@ -1,6 +1,6 @@
 export type Location = {
   name: string;
-  type: string;
+  url: string;
 };
 
 export type Episode = {

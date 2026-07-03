@@ -1,19 +1,19 @@
 # Rick and Morty Characters
 
-A React Router application for browsing Rick and Morty characters. The app fetches data from the public Rick and Morty GraphQL API and provides a character list view plus a detailed profile view for each character.
+A React Router application for browsing Rick and Morty characters. The app fetches data from the public Rick and Morty REST API and provides a character list view plus a detailed profile view for each character.
 
 ## Features
 
 - Browse and search a table of characters from the Rick and Morty universe
 - Open individual character profiles for more details
 - Navigate between the home page and profile pages with React Router
-- Display loading and error states for GraphQL requests
+- Display loading and error states for API requests
 
 ## Tech Stack
 
 - React 19
 - React Router 8
-- Apollo Client for GraphQL
+- TanStack Query
 - TypeScript
 - Tailwind CSS
 - Vite
@@ -21,8 +21,8 @@ A React Router application for browsing Rick and Morty characters. The app fetch
 ### Why this stack specifically?
 
 - React and React Router: small SPA with client-side navigation, only two routes and few components. Something like Angular would be an overkill
-- GraphQL and Apollo Client: fetching partial data for the table (which the REST API can't do), easy search, pagination, and simple in-memory cache
-- TypeScript: helps keep the GraphQL responses and related data objects typed, which makes working with the data easier and safer
+- TanStack Query: lightweight data fetching, retries, caching, and request state management
+- TypeScript: helps keep API responses and related data objects typed, which makes working with the data easier and safer
 - Tailwind: simple and fast styling
 - Vite: recommended by React
 
@@ -50,14 +50,14 @@ A React Router application for browsing Rick and Morty characters. The app fetch
 
 - `app/routes` — route components for the home and profile pages
 - `app/components` — UI components
-- `app/graphql` — Apollo queries and client setup
+- `app/api` — API query hooks and query client setup
 - `app/hooks` — reusable hooks such as debouncing helper
-- `app/types` — TypeScript types for GraphQL data and UI models
+- `app/types` — TypeScript types for API data and UI models
 - `tests` — integration tests
 
 ## Notes about the API
 
-API used: https://rickandmortyapi.com/graphql
+API used: https://rickandmortyapi.com/api
 
 The API only 300x300 images. This is not ideal for displaying them in a table. Ideally we would have an `srcset` with different size images depending on where and at what size we display them.
 
