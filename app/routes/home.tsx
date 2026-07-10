@@ -27,8 +27,8 @@ function getPageFromSearchParams(searchParams: URLSearchParams): number {
 }
 
 function normalizeSearchTerm(rawSearchTerm: string | null): string | null {
-  const nameParam = rawSearchTerm?.replace(/\s\s+/g, " ")?.slice(0, 50);
-  if (nameParam) {
+  const nameParam = rawSearchTerm?.trim().replace(/\s+/g, " ").slice(0, 50);
+  if (nameParam && nameParam.length > 0) {
     return nameParam;
   }
   return null;
@@ -41,7 +41,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState(urlSearchTerm);
   const debounce = useDebounce();
 
-  const { data, loading, error } = useTableData(page, searchTerm);
+  const { data, loading, error } = useTableData(page, urlSearchTerm);
   const rows = data?.characters.results ?? [];
   const totalPages = data?.characters.info.pages ?? 1;
 
@@ -95,11 +95,19 @@ export default function Home() {
         </div>
       ) : (
         <>
-          <div aria-live="polite" className="w-full px-1 text-sm text-slate-400 text-right">
-            Showing {rows.length} characters on page {page} of {totalPages}.
-          </div>
-          <Table rows={rows} />
-          <Pagination totalPages={totalPages} pageNumber={page} setPage={setPageParam} />
+          {page > totalPages ? (
+            <div className="w-full mt-10">
+              <ErrorMessage message={`Page ${page} does not exist. Total pages: ${totalPages}.`} />
+            </div>
+          ) : 
+          <>
+            <div aria-live="polite" className="w-full px-1 text-sm text-slate-400 text-right">
+              Showing {rows.length} characters on page {page} of {totalPages}.
+            </div>
+            <Table rows={rows} />
+            <Pagination totalPages={totalPages} pageNumber={page} setPage={setPageParam} />
+          </>
+          }
         </>
       )}
     </main>
