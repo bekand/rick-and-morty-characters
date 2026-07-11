@@ -55,7 +55,7 @@ export default function Home() {
       const nextParams = new URLSearchParams(prev);
       nextParams.set("page", page.toString());
       return nextParams;
-    });
+    }, { replace: true });
   };
 
   const setSearchTermParam = (rawTerm: string | null) => {
@@ -69,7 +69,7 @@ export default function Home() {
       }
       nextParams.set("page", "1"); // Reset to first page when search term changes
       return nextParams;
-    });
+    }, { replace: true });
   };
 
   const handleSearchChange = (term: string) => {

@@ -157,7 +157,7 @@ describe("Home route", () => {
     expect(useTableDataMock).toHaveBeenCalledWith(1, null);
   });
 
-  it("updates the url params and refetches after the search debounce", async () => {
+  it("updates the url params and only queries with the new search term after the search debounce", async () => {
     vi.useFakeTimers();
 
     const useTableDataMock = vi.mocked(useTableData);
@@ -188,7 +188,8 @@ describe("Home route", () => {
       fireEvent.change(screen.getByRole("textbox", { name: "Search" }), { target: { value: "Rick" } });
 
       expect(screen.getByTestId("location-probe")).toHaveTextContent("?page=2");
-      expect(useTableDataMock).not.toHaveBeenCalledWith(1, "Rick");
+      expect(useTableDataMock).toHaveBeenLastCalledWith(2, null);
+      expect(useTableDataMock).not.toHaveBeenCalledWith(expect.any(Number), "Rick");
 
       await act(async () => {
         await vi.advanceTimersByTimeAsync(300);
@@ -196,7 +197,7 @@ describe("Home route", () => {
 
       expect(screen.getByTestId("location-probe")).toHaveTextContent("name=Rick");
       expect(screen.getByTestId("location-probe")).toHaveTextContent("page=1");
-      expect(useTableDataMock).toHaveBeenCalledWith(1, "Rick");
+      expect(useTableDataMock).toHaveBeenLastCalledWith(1, "Rick");
     } finally {
       vi.useRealTimers();
     }
