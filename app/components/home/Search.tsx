@@ -18,6 +18,7 @@ export function Search({ value, onChange, label = "Search", placeholder = "Searc
       <div className="flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 shadow-sm">
         <input
           name="search by name"
+          maxLength={50}
           id={inputId}
           value={value ?? ""}
           onChange={(event) => onChange(event.target.value)}

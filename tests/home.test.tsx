@@ -154,7 +154,7 @@ describe("Home route", () => {
     expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
     expect(screen.getByRole("table")).toBeInTheDocument();
     expect(screen.getByText("Showing 2 characters on page 1 of 1.")).toBeInTheDocument();
-    expect(useTableDataMock).toHaveBeenCalledWith(1, " ");
+    expect(useTableDataMock).toHaveBeenCalledWith(1, null);
   });
 
   it("updates the url params and refetches after the search debounce", async () => {
