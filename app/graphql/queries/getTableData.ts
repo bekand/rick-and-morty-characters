@@ -12,9 +12,11 @@ type CharactersTableResponse = {
   };
 };
 
+type SearchOptions = Partial<Pick<TableRow, "name" | "species" | "status">>;
+
 const GET_TABLE_DATA = gql`
-  query GetTableData($page: Int!, $name: String) {
-    characters(page: $page, filter: { name: $name }) {
+  query GetTableData($page: Int!, $name: String, $species: String, $status: String) {
+    characters(page: $page, filter: { name: $name, species: $species, status: $status }) {
       info {
         count
         pages
@@ -28,8 +30,8 @@ const GET_TABLE_DATA = gql`
       }
     }
   }
-` as TypedDocumentNode<CharactersTableResponse, { page: number; name: string | null }>;
+` as TypedDocumentNode<CharactersTableResponse, { page: number; name?: string | null; species?: string | null; status?: string | null }>;
 
-export function useTableData(page: number, name: string | null) {
-  return useQuery(GET_TABLE_DATA, { variables: { page, name } });
+export function useTableData(page: number, searchOptions?: SearchOptions) {
+  return useQuery(GET_TABLE_DATA, { variables: { page, ...searchOptions } });
 }

@@ -1,7 +1,7 @@
 import { useId } from "react";
 
 interface SearchProps {
-  value: string | null;
+  value: string;
   onChange: (value: string) => void;
   label?: string;
   placeholder?: string;

@@ -6,7 +6,7 @@ import { ErrorMessage } from "~/components/shared/ErrorMessage";
 import { Pagination } from "~/components/home/Pagination";
 import { Search } from "~/components/home/Search";
 import { useSearchParams } from "react-router";
-import { useDebounce } from "~/hooks/useDebounce";
+import { useSearch } from "~/hooks/search/useSearch";
 
 export function meta() {
   return [
@@ -26,29 +26,18 @@ function getPageFromSearchParams(searchParams: URLSearchParams): number {
   return 1;
 }
 
-function normalizeSearchTerm(rawSearchTerm: string | null): string | null {
-  const nameParam = rawSearchTerm?.trim().replace(/\s+/g, " ").slice(0, 50);
-  if (nameParam && nameParam.length > 0) {
-    return nameParam;
-  }
-  return null;
-}
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const urlSearchTerm = normalizeSearchTerm(searchParams.get("name"));
   const page = getPageFromSearchParams(searchParams);
-  const [searchTerm, setSearchTerm] = useState(urlSearchTerm);
-  const debounce = useDebounce();
+  const {inputValue, searchTerm, handleSearchChange} = useSearch({ field: "name" });
 
-  const { data, loading, error } = useTableData(page, urlSearchTerm);
+  const { data, loading, error } = searchTerm !== undefined 
+    ? useTableData(page, { name: searchTerm })
+    : useTableData(page);
   const rows = data?.characters.results ?? [];
   const totalPages = data?.characters.info.pages ?? 1;
 
-  // Sync local input when URL changes externally
-  useEffect(() => {
-    setSearchTerm(urlSearchTerm);
-  }, [urlSearchTerm]);
 
   const setPageParam = (page: number) => {
     setSearchParams((prev) => {
@@ -58,31 +47,10 @@ export default function Home() {
     }, { replace: true });
   };
 
-  const setSearchTermParam = (rawTerm: string | null) => {
-    const term = normalizeSearchTerm(rawTerm);
-    setSearchParams((prev) => {
-      const nextParams = new URLSearchParams(prev);
-      if (term) {
-        nextParams.set("name", term);
-      } else {
-        nextParams.delete("name");
-      }
-      nextParams.set("page", "1"); // Reset to first page when search term changes
-      return nextParams;
-    }, { replace: true });
-  };
-
-  const handleSearchChange = (term: string) => {
-    setSearchTerm(term);
-    debounce(() => {
-      setSearchTermParam(term);
-    }, 300);
-  };
-
   return (
     <main className="flex w-full flex-col gap-1 items-center px-10 py-3 pb-8">
-      <div className="w-full self-start md:max-w-[50%]">
-        <Search value={searchTerm} onChange={handleSearchChange} />
+      <div className="w-full self-start flex flex-col gap-2 md:flex-row md:max-w-[80%]">
+        <Search value={inputValue ?? ""} onChange={handleSearchChange} />
       </div>
 
       {loading ? (

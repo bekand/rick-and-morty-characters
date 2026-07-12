@@ -154,7 +154,7 @@ describe("Home route", () => {
     expect(screen.getByRole("textbox", { name: "Search" })).toBeInTheDocument();
     expect(screen.getByRole("table")).toBeInTheDocument();
     expect(screen.getByText("Showing 2 characters on page 1 of 1.")).toBeInTheDocument();
-    expect(useTableDataMock).toHaveBeenCalledWith(1, null);
+    expect(useTableDataMock).toHaveBeenCalledWith(1);
   });
 
   it("updates the url params and only queries with the new search term after the search debounce", async () => {
@@ -188,16 +188,16 @@ describe("Home route", () => {
       fireEvent.change(screen.getByRole("textbox", { name: "Search" }), { target: { value: "Rick" } });
 
       expect(screen.getByTestId("location-probe")).toHaveTextContent("?page=2");
-      expect(useTableDataMock).toHaveBeenLastCalledWith(2, null);
-      expect(useTableDataMock).not.toHaveBeenCalledWith(expect.any(Number), "Rick");
+      expect(useTableDataMock).toHaveBeenLastCalledWith(2);
+      expect(useTableDataMock).not.toHaveBeenCalledWith(expect.any(Number), { name: "Rick" });
 
       await act(async () => {
         await vi.advanceTimersByTimeAsync(300);
       });
 
       expect(screen.getByTestId("location-probe")).toHaveTextContent("name=Rick");
-      expect(screen.getByTestId("location-probe")).toHaveTextContent("page=1");
-      expect(useTableDataMock).toHaveBeenLastCalledWith(1, "Rick");
+      expect(screen.getByTestId("location-probe")).not.toHaveTextContent("page=2");
+      expect(useTableDataMock).toHaveBeenLastCalledWith(1, { name: "Rick" });
     } finally {
       vi.useRealTimers();
     }
