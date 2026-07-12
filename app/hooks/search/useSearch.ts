@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useDebounce } from "../debounce/useDebounce";
 
@@ -16,6 +16,12 @@ export function useSearch({ field }: { field: string }) {
 	const [searchTermValue, setSearchTermValue] = useState(urlSearchTerm);
 	const debounce = useDebounce();
 
+	// Sync local input when URL changes externally
+	useEffect(() => {
+		setSearchTermValue(urlSearchTerm);
+	}, [urlSearchTerm]);
+
+
 	const handleSearchChange = (term: string) => {
 		setSearchTermValue(term);
 		debounce(() => {
@@ -32,15 +38,15 @@ export function useSearch({ field }: { field: string }) {
 			} else {
 				nextParams.delete(field);
 			}
-      nextParams.delete("page");
+			nextParams.delete("page");
 			return nextParams;
 		}, { replace: true });
 	};
 
-  return {
-    inputValue: searchTermValue,
-    searchTerm: urlSearchTerm,
-    handleSearchChange,
-  };
+	return {
+		inputValue: searchTermValue,
+		searchTerm: urlSearchTerm,
+		handleSearchChange,
+	};
 
 }	

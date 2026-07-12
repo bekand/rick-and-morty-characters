@@ -32,7 +32,7 @@ export default function Home() {
   const page = getPageFromSearchParams(searchParams);
   const {inputValue, searchTerm, handleSearchChange} = useSearch({ field: "name" });
 
-  const { data, loading, error } = searchTerm !== undefined 
+  const { data, loading, error, refetch } = searchTerm !== undefined 
     ? useTableData(page, { name: searchTerm })
     : useTableData(page);
   const rows = data?.characters.results ?? [];
@@ -59,7 +59,10 @@ export default function Home() {
         </div>
       ) : error ? (
         <div className="w-full mt-10">
-          <ErrorMessage message={error?.message ?? "Failed to load character data."} />
+          <ErrorMessage
+            message={error?.message ?? "Failed to load character data."}
+            retryAction={{ retry: refetch, retryLabel: "Retry" }}
+          />
         </div>
       ) : (
         <>
