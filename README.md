@@ -1,4 +1,4 @@
-# Rick and Morty Characters
+# Rick and Morty Characters (exercise)
 
 A React Router application for browsing Rick and Morty characters. The app fetches data from the public Rick and Morty GraphQL API and provides a character list view plus a detailed profile view for each character.
 
